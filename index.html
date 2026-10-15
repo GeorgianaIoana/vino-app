@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
@@ -41,7 +41,7 @@ button,[onClick]{will-change:transform}
   .safe-top{padding-top:calc(env(safe-area-inset-top) + 8px) !important}
   .safe-bot{padding-bottom:env(safe-area-inset-bottom) !important}
 }
-  .themebtn{position:fixed !important;right:10px;bottom:calc(env(safe-area-inset-bottom) + 96px);z-index:60;padding:9px 13px !important;font-size:12px !important;opacity:.9}
+  .themebtn{position:fixed !important;right:10px;bottom:calc(env(safe-area-inset-bottom) + 110px);z-index:60;padding:9px 13px !important;font-size:12px !important;opacity:.9}
   .themebtn span{display:none}
 .app{--soft:#F7F5F2;--soft2:#EDEAE5;--softBd:rgba(6,65,79,.06);--softBdOn:rgba(6,65,79,.10);--glass:rgba(255,255,255,.55);--glassOn:rgba(6,182,212,.16);--glassBd:rgba(6,65,79,.12);--glassBdOn:rgba(6,182,212,.5);--feed:#F2EFEB;--acc:#06B6D4;--acc2:#0891B2;--ink:#0F172A;--ink2:#475569;--muted:#64748B;--line:#E2E8F0;--paper:#FFFFFF;--surface:#F7F5F2;--tint:#ECFEFF;--screen:#FDFCFB;--frame:#0F172A;--chip:#FFFFFF;--ovl:rgba(15,23,42,.45);--okBg:#ECFDF5;--okBd:#A7F3D0;--okFg:#065F46;--okSub:#047857;--okIcon:#10B981;--warnBg:#FEF3C7;--warnFg:#B45309;--warnIcon:#D97706;--dangBg:#FEE2E2;--dangFg:#B91C1C;--dangText:#DC2626;--starEmpty:#E2E8F0;--unread:#F7F5F2}
 .app[data-theme="dark"]{--soft:#182741;--soft2:#101B2E;--softBd:rgba(255,255,255,.07);--softBdOn:rgba(255,255,255,.05);--glass:rgba(255,255,255,.07);--glassOn:rgba(6,182,212,.2);--glassBd:rgba(255,255,255,.14);--glassBdOn:rgba(6,182,212,.55);--feed:#0A1220;--ink:#F1F5F9;--ink2:#CBD5E1;--muted:#94A3B8;--line:#25344B;--paper:#16233B;--surface:#132033;--tint:#0E2A3C;--screen:#0F1A2A;--frame:#1E293B;--chip:#1B2A42;--ovl:rgba(2,6,23,.62);--okBg:#0D2A22;--okBd:#14543E;--okFg:#6EE7B7;--okSub:#34D399;--okIcon:#4ADE80;--warnBg:#2C2410;--warnFg:#FCD34D;--warnIcon:#FBBF24;--dangBg:#2E1618;--dangFg:#FCA5A5;--dangText:#F87171;--starEmpty:#3E5375;--unread:#1B2A42}
@@ -55,6 +55,28 @@ button,[onClick]{will-change:transform}
 @keyframes blink{0%,80%,100%{opacity:.28}40%{opacity:1}}
 @keyframes shimmer{0%,100%{opacity:.55}50%{opacity:1}}
 @keyframes splashOut{0%{opacity:1}70%{opacity:1}100%{opacity:0;visibility:hidden}}
+/* Focus states for keyboard navigation - WCAG compliance */
+button:focus-visible,[tabindex]:focus-visible,[onClick]:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+/* Touch targets - WCAG 2.5.5 minimum 44x44px */
+.themebtn{min-width:44px;min-height:44px}
+/* Additional breakpoints for smaller devices */
+@media (max-width:430px){
+  .bezel{width:100dvw !important}
+}
+@media (max-width:375px){
+  .bezel{width:100dvw !important}
+  h1{font-size:24px !important}
+}
+@media (orientation:landscape) and (max-height:500px){
+  .bezel{height:100dvh !important;border-radius:0 !important}
+}
+/* Fix for Terms screen on small devices - ensure scroll works */
+@media (max-height:750px){
+  .sc img[src*="handshake"],.sc img[src*="camera"],.sc img[src*="gift"],.sc img[src*="bell"]{width:64px !important;height:64px !important;margin:0 !important}
+}
+@media (max-height:700px){
+  .sc img[src*="handshake"],.sc img[src*="camera"],.sc img[src*="gift"],.sc img[src*="bell"]{width:48px !important;height:48px !important}
+}
 </style>
 <link rel="preload" as="image" href="assets/ic-cafea.png">
 <link rel="preload" as="image" href="assets/ic-restaurant.png">
@@ -71,10 +93,6 @@ button,[onClick]{will-change:transform}
 </helmet>
 <div class="app" data-theme="{{ themeName }}" style="min-height:100dvh;background:#F0F3F7;display:flex;flex-direction:column;align-items:center;padding:34px 0 60px;position:relative">
 
-<button class="themebtn" onClick="{{ toggleTheme }}" style="display:flex;align-items:center;gap:9px;background:#152036;color:#fff;border:0;border-radius:999px;padding:11px 22px;font:600 14px Outfit,sans-serif;cursor:pointer;box-shadow:0 6px 18px rgba(15,23,42,.18)">
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="{{ themeIcon }}"></path></svg>
-<span>{{ themeLabel }}</span>
-</button>
 
 <sc-if value="{{ showSplash }}" hint-placeholder-val="{{ true }}">
 <div style="position:fixed;inset:0;z-index:999;background:var(--acc);display:flex;align-items:center;justify-content:center;animation:{{ splashOutAnim }}">
@@ -112,7 +130,7 @@ button,[onClick]{will-change:transform}
 <!-- ═══ SIGN UP ═══ -->
 <sc-if value="{{ s_signup }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;display:flex;flex-direction:column;padding:22px 24px 24px;animation:fade .25s ease">
-<div onClick="{{ goSplash }}" style="cursor:pointer;width:26px;height:26px;display:flex;align-items:center;color:var(--ink)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg></div>
+<div onClick="{{ goSplash }}" role="button" aria-label="Înapoi" style="cursor:pointer;min-width:44px;min-height:44px;display:flex;align-items:center;color:var(--ink)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg></div>
 <h1 style="font:700 27px/1.15 Inter;letter-spacing:-.02em;color:var(--ink);margin:38px 0 3px;white-space:nowrap"><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.120s forwards">T</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.175s forwards">e</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;margin-left:2px;margin-right:3px"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.285s forwards;font:400 33px/0 Satisfy,cursive;vertical-align:baseline;letter-spacing:.01em">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.340s forwards;font:400 33px/0 Satisfy,cursive;vertical-align:baseline;letter-spacing:.01em">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.395s forwards;font:400 33px/0 Satisfy,cursive;vertical-align:baseline;letter-spacing:.01em">v</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.450s forwards;font:400 33px/0 Satisfy,cursive;vertical-align:baseline;letter-spacing:.01em">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.505s forwards;font:400 33px/0 Satisfy,cursive;vertical-align:baseline;letter-spacing:.01em">t</span></span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.655s forwards">s</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.710s forwards">ă</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.820s forwards">î</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.875s forwards">ț</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.930s forwards">i</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.040s forwards">c</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.095s forwards">r</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.150s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.205s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.260s forwards">z</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.315s forwards">i</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.425s forwards">c</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.480s forwards">o</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.535s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.590s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.645s forwards">u</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.700s forwards">l</span></span></h1>
 <div style="font:400 13.5px/1.45 Inter;color:var(--muted);margin-bottom:24px;opacity:0;animation:rise .5s cubic-bezier(.22,1,.36,1) 1.85s forwards">Bucură-te alături de oameni cu pasiuni comune</div>
 <button onClick="{{ goName }}" style="display:flex;align-items:center;gap:12px;height:52px;padding:0 16px;border-radius:12px;border:1.5px solid var(--acc);background:var(--paper);color:var(--ink);font:600 14.5px Outfit,sans-serif;cursor:pointer;margin-bottom:11px">
@@ -120,8 +138,8 @@ button,[onClick]{will-change:transform}
 <button onClick="{{ goName }}" style="display:flex;align-items:center;gap:12px;height:52px;padding:0 16px;border-radius:12px;border:1.5px solid var(--acc);background:var(--paper);color:var(--ink);font:600 14.5px Outfit,sans-serif;cursor:pointer">
 <svg width="22" height="22" viewBox="4 1.5 16 19.5" fill="{{ appleInk }}" style="flex:none"><path d="M17.05 12.8c.02 2.5 2.2 3.33 2.23 3.34-.02.06-.35 1.2-1.15 2.38-.7 1.02-1.42 2.03-2.56 2.05-1.12.02-1.48-.66-2.76-.66-1.28 0-1.68.64-2.74.68-1.1.04-1.93-1.1-2.63-2.11-1.44-2.08-2.54-5.88-1.06-8.45.73-1.28 2.05-2.09 3.48-2.11 1.08-.02 2.1.73 2.76.73.66 0 1.9-.9 3.2-.77.55.02 2.09.2 3.08 1.5-.08.06-1.84 1.08-1.85 3.42M14.9 4.6c.58-.7 1-1.68.88-2.66-.86.04-1.9.58-2.52 1.28-.55.62-1.04 1.62-.9 2.58.96.08 1.94-.49 2.54-1.2"></path></svg>Continuă cu Apple</button>
 <div style="display:flex;align-items:center;gap:12px;margin:34px 0 60px"><div style="flex:1;height:1px;background:var(--acc);opacity:.5"></div><span style="font:400 12px Inter;color:var(--muted)">sau</span><div style="flex:1;height:1px;background:var(--acc);opacity:.5"></div></div>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Email</div>
-<input value="{{ email }}" onChange="{{ setEmail }}" onFocus="{{ emailFocus }}" onBlur="{{ emailBlur }}" placeholder="your@email.com" style="height:50px;border-radius:12px;border:1.5px solid {{ emailBd }};background:{{ emailBg }};padding:0 14px;font:400 14.5px Inter;color:var(--ink);outline:none;width:100%;box-shadow:{{ emailGlow }};transition:border-color .16s ease,box-shadow .16s ease,background .16s ease">
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Email</div>
+<input value="{{ email }}" onChange="{{ setEmail }}" onFocus="{{ emailFocus }}" onBlur="{{ emailBlur }}" onKeyDown="{{ emailKey }}" enterkeyhint="go" placeholder="your@email.com" inputMode="email" style="height:50px;border-radius:12px;border:1.5px solid {{ emailBd }};background:{{ emailBg }};padding:0 14px;font:400 14.5px Inter;color:var(--ink);outline:none;width:100%;box-shadow:{{ emailGlow }};transition:border-color .16s ease,box-shadow .16s ease,background .16s ease">
 <sc-if value="{{ signupErr }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;align-items:center;gap:7px;margin-top:10px">
 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--warnIcon)" stroke-width="2" stroke-linecap="round" style="flex:none"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4M12 16h.01"></path></svg>
@@ -129,7 +147,7 @@ button,[onClick]{will-change:transform}
 </div>
 </sc-if>
 <button onClick="{{ goVerify }}" style="height:52px;width:100%;margin-top:11px;border:0;border-radius:26px;background:var(--acc);color:#FFFFFF;font:600 15.5px Outfit,sans-serif;cursor:pointer">Creează cont</button>
-<div style="text-align:center;margin-top:9px;font:400 11px Inter;color:var(--muted)">Când îți faci cont, accepți <span style="text-decoration:underline">Termenii</span> și <span style="text-decoration:underline">Politica de confidențialitate</span>.</div>
+<div style="text-align:center;margin-top:9px;font:400 12px Inter;color:var(--muted)">Când îți faci cont, accepți <span style="text-decoration:underline">Termenii</span> și <span style="text-decoration:underline">Politica de confidențialitate</span>.</div>
 <div style="flex:1"></div>
 <div style="width:132px;height:5px;border-radius:10px;background:var(--line);margin:0 auto"></div>
 </div>
@@ -138,7 +156,7 @@ button,[onClick]{will-change:transform}
 <!-- ═══ LOGIN ═══ -->
 <sc-if value="{{ s_login }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;display:flex;flex-direction:column;padding:22px 24px 24px;animation:fade .25s ease">
-<div onClick="{{ goSplash }}" style="cursor:pointer;width:26px;height:26px;display:flex;align-items:center;color:var(--ink)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg></div>
+<div onClick="{{ goSplash }}" role="button" aria-label="Înapoi" style="cursor:pointer;min-width:44px;min-height:44px;display:flex;align-items:center;color:var(--ink)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg></div>
 <h1 style="font:700 27px/1.15 Inter;letter-spacing:-.02em;color:var(--ink);margin:34px 0 6px">Bine ai revenit</h1>
 <div style="font:400 13.5px Inter;color:var(--muted);margin-bottom:22px">Intră în cont ca să-ți vezi întâlnirile.</div>
 <button onClick="{{ socialLogin }}" style="display:flex;align-items:center;gap:12px;height:52px;padding:0 16px;border-radius:12px;border:1.5px solid var(--acc);background:var(--paper);color:var(--ink);font:600 14.5px Outfit,sans-serif;cursor:pointer;margin-bottom:11px">
@@ -146,14 +164,14 @@ button,[onClick]{will-change:transform}
 <button onClick="{{ socialLogin }}" style="display:flex;align-items:center;gap:12px;height:52px;padding:0 16px;border-radius:12px;border:1.5px solid var(--acc);background:var(--paper);color:var(--ink);font:600 14.5px Outfit,sans-serif;cursor:pointer">
 <svg width="22" height="22" viewBox="4 1.5 16 19.5" fill="{{ appleInk }}" style="flex:none"><path d="M17.05 12.8c.02 2.5 2.2 3.33 2.23 3.34-.02.06-.35 1.2-1.15 2.38-.7 1.02-1.42 2.03-2.56 2.05-1.12.02-1.48-.66-2.76-.66-1.28 0-1.68.64-2.74.68-1.1.04-1.93-1.1-2.63-2.11-1.44-2.08-2.54-5.88-1.06-8.45.73-1.28 2.05-2.09 3.48-2.11 1.08-.02 2.1.73 2.76.73.66 0 1.9-.9 3.2-.77.55.02 2.09.2 3.08 1.5-.08.06-1.84 1.08-1.85 3.42M14.9 4.6c.58-.7 1-1.68.88-2.66-.86.04-1.9.58-2.52 1.28-.55.62-1.04 1.62-.9 2.58.96.08 1.94-.49 2.54-1.2"></path></svg>Continuă cu Apple</button>
 <div style="display:flex;align-items:center;gap:12px;margin:24px 0"><div style="flex:1;height:1px;background:var(--acc);opacity:.5"></div><span style="font:400 12px Inter;color:var(--muted)">sau</span><div style="flex:1;height:1px;background:var(--acc);opacity:.5"></div></div>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Email</div>
-<input onFocus="{{ loginEmailFocus }}" onBlur="{{ loginEmailBlur }}" value="{{ loginEmail }}" onChange="{{ setLoginEmail }}" placeholder="andrei@email.com" style="height:50px;border-radius:12px;border:1.5px solid {{ loginEmailBd }};background:#F3F5F7;padding:0 14px;font:400 14.5px Inter;color:var(--ink);outline:none;box-shadow:{{ loginEmailGlow }};transition:border-color .16s ease,box-shadow .16s ease;width:100%">
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Email</div>
+<input onFocus="{{ loginEmailFocus }}" onBlur="{{ loginEmailBlur }}" value="{{ loginEmail }}" onChange="{{ setLoginEmail }}" placeholder="andrei@email.com" inputMode="email" style="height:50px;border-radius:12px;border:1.5px solid {{ loginEmailBd }};background:var(--surface);padding:0 14px;font:400 14.5px Inter;color:var(--ink);outline:none;box-shadow:{{ loginEmailGlow }};transition:border-color .16s ease,box-shadow .16s ease;width:100%">
 <div style="display:flex;align-items:baseline;margin:14px 0 8px">
-<div style="flex:1;font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)">Parolă</div>
+<div style="flex:1;font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)">Parolă</div>
 <div onClick="{{ goForgot }}" style="font:600 12px Inter;color:var(--acc2);cursor:pointer">Ai uitat parola?</div>
 </div>
 <div style="position:relative">
-<input type="{{ passType }}" onFocus="{{ loginPassFocus }}" onBlur="{{ loginPassBlur }}" value="{{ loginPass }}" onChange="{{ setLoginPass }}" placeholder="••••••••" style="height:50px;border-radius:12px;border:1.5px solid {{ loginPassBd }};background:#F3F5F7;padding:0 46px 0 14px;font:400 14.5px Inter;color:var(--ink);outline:none;box-shadow:{{ loginPassGlow }};transition:border-color .16s ease,box-shadow .16s ease;width:100%">
+<input type="{{ passType }}" onFocus="{{ loginPassFocus }}" onBlur="{{ loginPassBlur }}" value="{{ loginPass }}" onChange="{{ setLoginPass }}" placeholder="••••••••" style="height:50px;border-radius:12px;border:1.5px solid {{ loginPassBd }};background:var(--surface);padding:0 46px 0 14px;font:400 14.5px Inter;color:var(--ink);outline:none;box-shadow:{{ loginPassGlow }};transition:border-color .16s ease,box-shadow .16s ease;width:100%">
 <div onClick="{{ toggleShowPass }}" style="position:absolute;right:6px;top:6px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink2)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7"></path><circle cx="12" cy="12" r="3"></circle><path d="{{ eyeSlash }}"></path></svg></div>
 </div>
 <sc-if value="{{ loginErr }}" hint-placeholder-val="{{ false }}">
@@ -172,7 +190,7 @@ button,[onClick]{will-change:transform}
 <!-- ═══ COD DE VERIFICARE ═══ -->
 <sc-if value="{{ s_code }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;display:flex;flex-direction:column;padding:22px 24px 24px;animation:fade .25s ease">
-<div onClick="{{ codeBack }}" style="display:flex;align-items:center;gap:5px;align-self:flex-start;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
+<div onClick="{{ codeBack }}" role="button" aria-label="Înapoi" style="display:flex;align-items:center;gap:5px;align-self:flex-start;min-height:44px;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
 <h1 style="font:700 27px/1.2 Inter;letter-spacing:-.02em;color:var(--ink);margin:30px 0 6px"><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.100s forwards">V</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.150s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.200s forwards">r</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.250s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.300s forwards">f</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.350s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.400s forwards">c</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.450s forwards">ă</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.500s forwards">m</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.600s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.650s forwards">u</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.700s forwards">m</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.750s forwards">ă</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.800s forwards">r</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.850s forwards">u</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.900s forwards">l</span></span></h1>
 <div style="opacity:0;animation:rise .5s cubic-bezier(.22,1,.36,1) 1.57s forwards;font:400 13.5px Inter;line-height:1.55;color:var(--muted);margin-bottom:26px;text-wrap:pretty">Ți-am trimis un cod din 6 cifre la <span style="color:var(--ink);font-weight:600">{{ codeDest }}</span>. Introdu-l aici și mergem mai departe.</div>
 <div style="position:relative">
@@ -181,7 +199,7 @@ button,[onClick]{will-change:transform}
 <div style="height:56px;border-radius:12px;border:1.5px solid {{ b.bd }};background:{{ b.bg }};display:flex;align-items:center;justify-content:center;font:700 22px Inter;color:var(--ink)">{{ b.d }}</div>
 </sc-for>
 </div>
-<input value="{{ codeVal }}" onChange="{{ setCode }}" inputMode="numeric" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;background:transparent;font:400 16px Inter;color:transparent;caret-color:transparent;outline:none;cursor:pointer">
+<input value="{{ codeVal }}" onChange="{{ setCode }}" autoFocus="{{ true }}" inputMode="numeric" enterkeyhint="done" onKeyDown="{{ codeKey }}" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;background:transparent;font:400 16px Inter;color:transparent;caret-color:transparent;outline:none;cursor:pointer">
 </div>
 <sc-if value="{{ codeErr }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;align-items:center;gap:7px;margin-top:12px">
@@ -199,11 +217,11 @@ button,[onClick]{will-change:transform}
 <!-- ═══ AM UITAT PAROLA ═══ -->
 <sc-if value="{{ s_forgot }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;display:flex;flex-direction:column;padding:22px 24px 24px;animation:fade .25s ease">
-<div onClick="{{ goLogin }}" style="cursor:pointer;width:26px;height:26px;display:flex;align-items:center;color:var(--ink)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg></div>
+<div onClick="{{ goLogin }}" role="button" aria-label="Înapoi" style="cursor:pointer;min-width:44px;min-height:44px;display:flex;align-items:center;color:var(--ink)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg></div>
 <h1 style="font:700 27px/1.2 Inter;letter-spacing:-.02em;color:var(--ink);margin:34px 0 6px">Resetează parola</h1>
 <div style="font:400 13.5px Inter;line-height:1.5;color:var(--muted);margin-bottom:24px;text-wrap:pretty">Scrie adresa contului tău și îți trimitem un cod de verificare.</div>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Email</div>
-<input onFocus="{{ fpEmailFocus }}" onBlur="{{ fpEmailBlur }}" value="{{ fpEmail }}" onChange="{{ setFpEmail }}" placeholder="andrei@email.com" style="height:50px;border-radius:12px;border:1.5px solid {{ fpBd }};background:#F3F5F7;padding:0 14px;font:400 14.5px Inter;color:var(--ink);outline:none;box-shadow:{{ fpEmailGlow }};transition:border-color .16s ease,box-shadow .16s ease;width:100%">
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Email</div>
+<input onFocus="{{ fpEmailFocus }}" onBlur="{{ fpEmailBlur }}" value="{{ fpEmail }}" onChange="{{ setFpEmail }}" placeholder="andrei@email.com" inputMode="email" style="height:50px;border-radius:12px;border:1.5px solid {{ fpBd }};background:var(--surface);padding:0 14px;font:400 14.5px Inter;color:var(--ink);outline:none;box-shadow:{{ fpEmailGlow }};transition:border-color .16s ease,box-shadow .16s ease;width:100%">
 <sc-if value="{{ fpErr }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;align-items:center;gap:7px;margin-top:10px">
 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--warnIcon)" stroke-width="2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24));flex:none"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4M12 16h.01"></path></svg>
@@ -220,10 +238,10 @@ button,[onClick]{will-change:transform}
 <!-- ═══ PAROLĂ NOUĂ ═══ -->
 <sc-if value="{{ s_reset }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;display:flex;flex-direction:column;padding:22px 24px 24px;animation:fade .25s ease">
-<div onClick="{{ goForgot }}" style="cursor:pointer;width:26px;height:26px;display:flex;align-items:center;color:var(--ink)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg></div>
+<div onClick="{{ goForgot }}" role="button" aria-label="Înapoi" style="cursor:pointer;min-width:44px;min-height:44px;display:flex;align-items:center;color:var(--ink)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg></div>
 <h1 style="font:700 27px/1.2 Inter;letter-spacing:-.02em;color:var(--ink);margin:34px 0 6px">Alege o parolă nouă</h1>
 <div style="font:400 13.5px Inter;line-height:1.5;color:var(--muted);margin-bottom:24px">Minimum 8 caractere.</div>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Parolă nouă</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Parolă nouă</div>
 <div style="position:relative">
 <input type="{{ passType }}" onFocus="{{ np1Focus }}" onBlur="{{ np1Blur }}" value="{{ np1 }}" onChange="{{ setNp1 }}" placeholder="••••••••" style="height:50px;border-radius:12px;border:1.5px solid {{ np1FocBd }};background:var(--paper);padding:0 46px 0 14px;font:400 14.5px Inter;color:var(--ink);outline:none;box-shadow:{{ np1Glow }};transition:border-color .16s ease,box-shadow .16s ease;width:100%">
 <div onClick="{{ toggleShowPass }}" style="position:absolute;right:6px;top:6px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink2)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7"></path><circle cx="12" cy="12" r="3"></circle><path d="{{ eyeSlash }}"></path></svg></div>
@@ -232,8 +250,8 @@ button,[onClick]{will-change:transform}
 <div style="flex:1;height:4px;border-radius:4px;background:var(--line);overflow:hidden"><div style="height:100%;width:{{ pwW }};background:{{ pwColor }};border-radius:4px;transition:width .2s ease"></div></div>
 <div style="font:600 11.5px Inter;color:{{ pwColor }};width:64px;text-align:right">{{ pwLabel }}</div>
 </div>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px">Confirmă parola</div>
-<input type="{{ passType }}" onFocus="{{ np2Focus }}" onBlur="{{ np2Blur }}" value="{{ np2 }}" onChange="{{ setNp2 }}" placeholder="••••••••" style="height:50px;border-radius:12px;border:1.5px solid {{ np2Bd }};background:#F3F5F7;padding:0 14px;font:400 14.5px Inter;color:var(--ink);outline:none;box-shadow:{{ np2Glow }};transition:border-color .16s ease,box-shadow .16s ease;width:100%">
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px">Confirmă parola</div>
+<input type="{{ passType }}" onFocus="{{ np2Focus }}" onBlur="{{ np2Blur }}" value="{{ np2 }}" onChange="{{ setNp2 }}" placeholder="••••••••" style="height:50px;border-radius:12px;border:1.5px solid {{ np2Bd }};background:var(--surface);padding:0 14px;font:400 14.5px Inter;color:var(--ink);outline:none;box-shadow:{{ np2Glow }};transition:border-color .16s ease,box-shadow .16s ease;width:100%">
 <sc-if value="{{ resetErr }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;align-items:center;gap:7px;margin-top:10px">
 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--warnIcon)" stroke-width="2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24));flex:none"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4M12 16h.01"></path></svg>
@@ -250,14 +268,14 @@ button,[onClick]{will-change:transform}
 <sc-if value="{{ s_name }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;display:flex;flex-direction:column;animation:fade .25s ease">
 <div style="display:flex;gap:8px;padding:6px 24px 0"><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div></div>
-<div onClick="{{ goVerified }}" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
+<div onClick="{{ goVerified }}" role="button" aria-label="Înapoi" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;min-height:44px;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
 <div style="padding:20px 24px 0;flex:1;display:flex;flex-direction:column">
 <h1 style="font:700 28px/1.15 Inter;letter-spacing:-.02em;color:var(--ink);margin:0 0 5px"><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.100s forwards">C</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.150s forwards">u</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.200s forwards">m</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.300s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.350s forwards">e</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.450s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.500s forwards">u</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.550s forwards">m</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.600s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.650s forwards">ș</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.700s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.750s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.800s forwards">?</span></span></h1>
 <div style="opacity:0;animation:rise .5s cubic-bezier(.22,1,.36,1) 1.27s forwards;font:400 13px Inter;color:var(--muted);margin-bottom:18px">Așa te vor găsi oamenii pe <span style="font:400 17px Satisfy,cursive;margin-left:2px;letter-spacing:.01em">Invite</span>.</div>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Prenume</div>
-<input value="{{ first }}" onChange="{{ setFirst }}" onFocus="{{ firstFocus }}" onBlur="{{ firstBlur }}" placeholder="Andrei" style="height:52px;border-radius:12px;border:1.5px solid {{ firstBd }};background:var(--paper);padding:0 15px;font:400 15px Inter;color:var(--ink);outline:none;width:100%;margin-bottom:14px;box-shadow:{{ firstGlow }};transition:border-color .16s ease,box-shadow .16s ease">
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Nume</div>
-<input value="{{ last }}" onChange="{{ setLast }}" onFocus="{{ lastFocus }}" onBlur="{{ lastBlur }}" placeholder="Popescu" style="height:52px;border-radius:12px;border:1.5px solid {{ lastBd }};background:var(--paper);padding:0 15px;font:400 15px Inter;color:var(--ink);outline:none;width:100%;box-shadow:{{ lastGlow }};transition:border-color .16s ease,box-shadow .16s ease">
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Prenume</div>
+<input value="{{ first }}" onChange="{{ setFirst }}" onFocus="{{ firstFocus }}" onBlur="{{ firstBlur }}" onKeyDown="{{ firstKey }}" autoFocus="{{ true }}" enterkeyhint="next" placeholder="Andrei" style="height:52px;border-radius:12px;border:1.5px solid {{ firstBd }};background:var(--paper);padding:0 15px;font:400 15px Inter;color:var(--ink);outline:none;width:100%;margin-bottom:14px;box-shadow:{{ firstGlow }};transition:border-color .16s ease,box-shadow .16s ease">
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Nume</div>
+<input value="{{ last }}" onChange="{{ setLast }}" onFocus="{{ lastFocus }}" onBlur="{{ lastBlur }}" onKeyDown="{{ lastKey }}" enterkeyhint="done" placeholder="Popescu" style="height:52px;border-radius:12px;border:1.5px solid {{ lastBd }};background:var(--paper);padding:0 15px;font:400 15px Inter;color:var(--ink);outline:none;width:100%;box-shadow:{{ lastGlow }};transition:border-color .16s ease,box-shadow .16s ease">
 <div style="flex:1"></div>
 <button onClick="{{ goGreet }}" style="height:52px;width:100%;border:0;border-radius:26px;background:{{ nameBtnBg }};color:{{ nameBtnFg }};font:600 15.5px Outfit,sans-serif;cursor:pointer">Continuă</button>
 <div style="width:132px;height:5px;border-radius:10px;background:var(--line);margin:26px auto 24px"></div>
@@ -268,7 +286,7 @@ button,[onClick]{will-change:transform}
 <!-- ═══ VERIFY: alege metoda ═══ -->
 <sc-if value="{{ s_verify }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;display:flex;flex-direction:column;animation:fade .25s ease">
-<div onClick="{{ goSignup }}" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
+<div onClick="{{ goSignup }}" role="button" aria-label="Înapoi" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;min-height:44px;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
 <div style="padding:20px 24px 0;flex:1;display:flex;flex-direction:column">
 <h1 style="font:700 28px/1.15 Inter;letter-spacing:-.02em;color:var(--ink);margin:0 0 6px;text-wrap:pretty"><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.100s forwards">C</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.150s forwards">o</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.200s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.250s forwards">f</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.300s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.350s forwards">r</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.400s forwards">m</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.450s forwards">ă</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.500s forwards">-</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.550s forwards">ț</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.600s forwards">i</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.700s forwards">c</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.750s forwards">o</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.800s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.850s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.900s forwards">u</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.950s forwards">l</span></span></h1>
 <div style="opacity:0;animation:rise .5s cubic-bezier(.22,1,.36,1) 1.42s forwards;font:400 13.5px/1.5 Inter;color:var(--ink2);margin-bottom:22px;text-wrap:pretty">Îți trimitem un cod din 6 cifre. Alege unde vrei să-l primești.</div>
@@ -284,8 +302,8 @@ button,[onClick]{will-change:transform}
 </sc-for>
 </div>
 <sc-if value="{{ vSmsOn }}" hint-placeholder-val="{{ false }}">
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:20px 0 7px">Număr de telefon</div>
-<input onFocus="{{ phoneFocus }}" onBlur="{{ phoneBlur }}" value="{{ phone }}" onChange="{{ setPhone }}" inputMode="tel" placeholder="07xx xxx xxx" style="height:52px;border-radius:12px;border:1.5px solid {{ phoneFocBd }};background:#F3F5F7;padding:0 15px;font:400 15px Inter;color:var(--ink);outline:none;box-shadow:{{ phoneGlow }};transition:border-color .16s ease,box-shadow .16s ease;width:100%">
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:20px 0 7px">Număr de telefon</div>
+<input onFocus="{{ phoneFocus }}" onBlur="{{ phoneBlur }}" value="{{ phone }}" onChange="{{ setPhone }}" inputMode="tel" placeholder="07xx xxx xxx" style="height:52px;border-radius:12px;border:1.5px solid {{ phoneFocBd }};background:var(--surface);padding:0 15px;font:400 15px Inter;color:var(--ink);outline:none;box-shadow:{{ phoneGlow }};transition:border-color .16s ease,box-shadow .16s ease;width:100%">
 </sc-if>
 <div style="flex:1"></div>
 <button onClick="{{ sendCode }}" style="height:52px;width:100%;border:0;border-radius:26px;background:{{ vBtnBg }};color:{{ vBtnFg }};font:600 15.5px Outfit,sans-serif;cursor:pointer">Trimite codul</button>
@@ -297,7 +315,7 @@ button,[onClick]{will-change:transform}
 <!-- ═══ VERIFY: confirmat ═══ -->
 <sc-if value="{{ s_verified }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;display:flex;flex-direction:column;animation:fade .25s ease">
-<div onClick="{{ goVerify }}" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
+<div onClick="{{ goVerify }}" role="button" aria-label="Înapoi" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;min-height:44px;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
 <div style="padding:20px 24px 0;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
 <div style="width:76px;height:76px;border-radius:999px;background:var(--tint);display:flex;align-items:center;justify-content:center;color:var(--acc2)"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m5 13 4.5 4.5L19 7"></path></svg></div>
 <div style="font:700 24px/1.2 Inter;letter-spacing:-.02em;color:var(--ink);text-align:center">Cont confirmat</div>
@@ -313,7 +331,7 @@ button,[onClick]{will-change:transform}
 <!-- ═══ ÎNCÂNTAT DE CUNOȘTINȚĂ ═══ -->
 <sc-if value="{{ s_greet }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;display:flex;flex-direction:column;animation:fade .25s ease">
-<div onClick="{{ goName }}" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
+<div onClick="{{ goName }}" role="button" aria-label="Înapoi" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;min-height:44px;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
 <div style="padding:20px 28px 0;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px">
 <div style="position:relative;display:flex;align-items:center;justify-content:center">
 <div style="position:absolute;width:104px;height:104px;border-radius:999px;background:var(--tint)"></div>
@@ -337,7 +355,7 @@ button,[onClick]{will-change:transform}
 <sc-if value="{{ s_phone }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;display:flex;flex-direction:column;animation:fade .25s ease">
 <div style="display:flex;gap:8px;padding:6px 24px 0"><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div></div>
-<div onClick="{{ goGreet }}" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
+<div onClick="{{ goGreet }}" role="button" aria-label="Înapoi" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;min-height:44px;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
 <div style="padding:20px 24px 0;flex:1;display:flex;flex-direction:column">
 <h1 style="font:700 27px/1.2 Inter;letter-spacing:-.02em;color:var(--ink);margin:0 0 6px;text-wrap:pretty"><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.100s forwards">C</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.150s forwards">a</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.200s forwards">r</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.250s forwards">e</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.350s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.400s forwards">s</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.450s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.500s forwards">e</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.600s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.650s forwards">u</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.700s forwards">m</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.750s forwards">ă</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.800s forwards">r</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.850s forwards">u</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.900s forwards">l</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.000s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.050s forwards">ă</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.100s forwards">u</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.200s forwards">d</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.250s forwards">e</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.350s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.400s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.450s forwards">l</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.500s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.550s forwards">f</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.600s forwards">o</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.650s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.700s forwards">?</span></span></h1>
 <div style="opacity:0;animation:rise .5s cubic-bezier(.22,1,.36,1) 2.17s forwards;font:400 13.5px/1.55 Inter;color:var(--muted);margin-bottom:22px;text-wrap:pretty">Numărul de telefon este utilizat doar pentru verificarea identității și securitatea contului tău.</div>
@@ -345,7 +363,7 @@ button,[onClick]{will-change:transform}
 <div style="height:52px;flex:none;display:flex;align-items:center;gap:7px;padding:0 13px;border-radius:12px;border:1.5px solid {{ phonePfxBd }};background:var(--paper);font:600 15px Inter;color:var(--ink);transition:border-color .16s ease">
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--acc2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24));flex:none"><path d="M5 4h4l1.6 4.2-2.2 1.6a12 12 0 0 0 5.8 5.8l1.6-2.2L20 15v4a1.6 1.6 0 0 1-1.7 1.6A15.6 15.6 0 0 1 3.4 5.7A1.6 1.6 0 0 1 5 4"></path></svg>+40
 </div>
-<input value="{{ phoneLocal }}" onChange="{{ setPhoneLocal }}" onFocus="{{ phoneFocus }}" onBlur="{{ phoneBlur }}" inputMode="tel" maxLength="11" placeholder="721 234 567" style="flex:1;min-width:0;height:52px;border-radius:12px;border:1.5px solid {{ phoneBd }};background:var(--paper);padding:0 15px;font:500 15.5px Inter;letter-spacing:.02em;color:var(--ink);outline:none;box-shadow:{{ phoneGlow }};transition:border-color .16s ease,box-shadow .16s ease"></div>
+<input value="{{ phoneLocal }}" onChange="{{ setPhoneLocal }}" onFocus="{{ phoneFocus }}" onBlur="{{ phoneBlur }}" onKeyDown="{{ phoneKey }}" autoFocus="{{ true }}" inputMode="tel" enterkeyhint="send" maxLength="11" placeholder="721 234 567" style="flex:1;min-width:0;height:52px;border-radius:12px;border:1.5px solid {{ phoneBd }};background:var(--paper);padding:0 15px;font:500 15.5px Inter;letter-spacing:.02em;color:var(--ink);outline:none;box-shadow:{{ phoneGlow }};transition:border-color .16s ease,box-shadow .16s ease"></div>
 <sc-if value="{{ phoneErr }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;align-items:center;gap:7px;margin-top:10px">
 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--warnIcon)" stroke-width="2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24));flex:none"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4M12 16h.01"></path></svg>
@@ -363,10 +381,10 @@ button,[onClick]{will-change:transform}
 <sc-if value="{{ s_terms }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;display:flex;flex-direction:column;animation:fade .25s ease">
 <div style="display:flex;gap:8px;padding:6px 24px 0"><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div></div>
-<div onClick="{{ goPhone }}" style="display:flex;align-items:center;gap:5px;padding:22px 24px 0;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
-<div style="padding:22px 24px 0;flex:1;display:flex;flex-direction:column">
+<div onClick="{{ goPhone }}" role="button" aria-label="Înapoi" style="display:flex;align-items:center;gap:5px;padding:22px 24px 0;min-height:44px;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
+<div class="sc" style="padding:22px 24px 16px;flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column">
 <div style="display:flex;justify-content:center;margin:2px 0 12px">
-<img src="assets/handshake-3d.png" alt="" style="width:108px;height:108px;display:block"></div>
+<img src="assets/handshake-3d.png" alt="Mâini care dau noroc" role="img" style="width:108px;height:108px;display:block"></div>
 <h1 style="font:700 27px/1.25 Inter;letter-spacing:-.02em;color:var(--ink);margin:0 0 7px;text-wrap:pretty"><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.100s forwards">T</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.150s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.200s forwards">r</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.250s forwards">m</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.300s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.350s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.400s forwards">i</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.500s forwards">ș</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.550s forwards">i</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.650s forwards">c</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.700s forwards">o</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.750s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.800s forwards">d</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.850s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.900s forwards">ț</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.950s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.000s forwards">i</span></span></h1>
 <div style="opacity:0;animation:rise .5s cubic-bezier(.22,1,.36,1) 1.5s forwards;font:400 13.5px/1.55 Inter;color:var(--muted);margin-bottom:20px;text-wrap:pretty">Te rugăm să accepți termenii și condițiile</div>
 <div style="display:flex;flex-direction:column;gap:13px">
@@ -388,10 +406,11 @@ button,[onClick]{will-change:transform}
 </div>
 </div>
 <div style="font:400 12.5px/1.6 Inter;color:var(--muted);margin-top:18px;text-wrap:pretty">Apăsând Accept, îți creezi contul și ești de acord cu <span style="color:var(--acc2);font-weight:500">Termenii de utilizare</span>, <span style="color:var(--acc2);font-weight:500">Politica de confidențialitate</span> și <span style="color:var(--acc2);font-weight:500">Politica de cookie-uri</span>.</div>
-<div style="flex:1;min-height:26px"></div>
+</div>
+<div style="padding:0 24px calc(24px + env(safe-area-inset-bottom));flex:none;background:var(--screen)">
 <button onClick="{{ goPhoto }}" style="height:52px;width:100%;border:0;border-radius:26px;background:var(--acc);color:#FFFFFF;font:600 15.5px Outfit,sans-serif;cursor:pointer">Accept</button>
 <div onClick="{{ goLogin }}" style="text-align:center;margin-top:18px;font:600 13.5px Inter;color:var(--acc2);cursor:pointer">Am deja cont</div>
-<div style="width:132px;height:5px;border-radius:10px;background:var(--line);margin:26px auto 24px"></div>
+<div style="width:132px;height:5px;border-radius:10px;background:var(--line);margin:26px auto 0"></div>
 </div>
 </div>
 </sc-if>
@@ -400,10 +419,10 @@ button,[onClick]{will-change:transform}
 <sc-if value="{{ s_photo }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;display:flex;flex-direction:column;animation:fade .25s ease">
 <div style="display:flex;gap:8px;padding:6px 24px 0"><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div></div>
-<div onClick="{{ goTerms }}" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
+<div onClick="{{ goTerms }}" role="button" aria-label="Înapoi" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;min-height:44px;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
 <div style="padding:20px 24px 0;flex:1;display:flex;flex-direction:column">
 <div style="display:flex;justify-content:center;margin:2px 0 14px">
-<img src="assets/camera-3d.png" alt="" style="width:104px;height:104px;display:block"></div>
+<img src="assets/camera-3d.png" alt="Cameră foto" role="img" style="width:104px;height:104px;display:block"></div>
 <h1 style="font:700 28px/1.15 Inter;letter-spacing:-.02em;color:var(--ink);margin:0 0 5px;text-align:center"><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.100s forwards">A</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.150s forwards">d</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.200s forwards">a</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.250s forwards">u</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.300s forwards">g</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.350s forwards">ă</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.450s forwards">o</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.550s forwards">p</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.600s forwards">o</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.650s forwards">z</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.700s forwards">ă</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.800s forwards">c</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.850s forwards">u</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.950s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.000s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.050s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.100s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.150s forwards">.</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.250s forwards">N</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.300s forwards">u</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.400s forwards">u</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.450s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.500s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.550s forwards">a</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.650s forwards">s</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.700s forwards">ă</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.800s forwards">z</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.850s forwards">â</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.900s forwards">m</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.950s forwards">b</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 2.000s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 2.050s forwards">ș</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 2.100s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 2.150s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 2.200s forwards">!</span></span></h1>
 <div style="opacity:0;animation:rise .5s cubic-bezier(.22,1,.36,1) 2.62s forwards;font:400 13px/1.5 Inter;color:var(--muted);text-wrap:pretty;text-align:center;margin-bottom:26px">Alege o fotografie reală și recentă, în care să fii ușor de recunoscut. Vrem ca oamenii să știe cu cine vorbesc și să aibă încredere că ești tu.</div>
 <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
@@ -437,13 +456,13 @@ button,[onClick]{will-change:transform}
 <sc-if value="{{ s_bday }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;display:flex;flex-direction:column;animation:fade .25s ease">
 <div style="display:flex;gap:8px;padding:6px 24px 0"><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div></div>
-<div onClick="{{ goPhoto }}" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
+<div onClick="{{ goPhoto }}" role="button" aria-label="Înapoi" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;min-height:44px;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
 <div style="padding:16px 24px 0;flex:1;display:flex;flex-direction:column">
 <div style="display:flex;justify-content:center;margin:2px 0 14px">
-<img src="assets/gift-3d.png" alt="" style="width:104px;height:104px;display:block"></div>
+<img src="assets/gift-3d.png" alt="Cutie cadou" role="img" style="width:104px;height:104px;display:block"></div>
 <h1 style="font:700 28px/1.2 Inter;letter-spacing:-.025em;color:var(--ink);margin:0 0 7px;text-align:center"><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.120s forwards">C</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.170s forwards">â</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.220s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.270s forwards">d</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.370s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.420s forwards">e</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.520s forwards">s</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.570s forwards">ă</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.620s forwards">r</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.670s forwards">b</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.720s forwards">ă</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.770s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.820s forwards">o</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.870s forwards">r</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.920s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.970s forwards">m</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.020s forwards">?</span></span></h1>
 <div style="font:400 13.5px/1.6 Inter;color:var(--muted);margin:0 auto 22px;text-align:center;max-width:21em;text-wrap:pretty;opacity:0;animation:rise .5s cubic-bezier(.22,1,.36,1) 1.57s forwards">Te rugăm să ne spui când este ziua ta de naștere. Ne ajută să-ți facem recomandări cât mai bune.</div>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Data nașterii</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Data nașterii</div>
 <div onClick="{{ openBday }}" style="display:flex;align-items:center;justify-content:space-between;height:54px;border-radius:12px;border:1px solid var(--line);background:var(--paper);padding:0 15px;cursor:pointer">
 <span style="font:500 15px Inter;color:{{ bdayLabelFg }}">{{ bdayLabel }}</span>
 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--ink2)" stroke-width="1.7" stroke-linecap="round"><path d="M3.1 7.05a2.9 2.9 0 0 1 2.9-2.9h12a2.9 2.9 0 0 1 2.9 2.9v11.9a2.9 2.9 0 0 1-2.9 2.9H6a2.9 2.9 0 0 1-2.9-2.9zM3.1 9.35h17.8M7.4 2.1v3.9M16.6 2.1v3.9"></path></svg>
@@ -469,7 +488,7 @@ button,[onClick]{will-change:transform}
 <sc-if value="{{ s_interests }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;display:flex;flex-direction:column;min-height:0;animation:fade .25s ease">
 <div style="display:flex;gap:8px;padding:6px 24px 0"><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--line)"></div></div>
-<div onClick="{{ goBirthday }}" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
+<div onClick="{{ goBirthday }}" role="button" aria-label="Înapoi" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;min-height:44px;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
 <div style="padding:14px 24px 0;flex:none"><h1 style="font:700 27px/1.2 Inter;letter-spacing:-.02em;color:var(--ink);margin:0;text-wrap:pretty"><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.150s forwards">C</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.200s forwards">a</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.250s forwards">r</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.300s forwards">e</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.450s forwards">s</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.500s forwards">u</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.550s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.600s forwards">t</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.750s forwards">a</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.800s forwards">c</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.850s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.900s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.950s forwards">v</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.000s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.050s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.100s forwards">ă</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.150s forwards">ț</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.200s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.250s forwards">l</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.300s forwards">e</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.450s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.500s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.550s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.600s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.650s forwards">r</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.700s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.750s forwards">s</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.800s forwards">a</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.850s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.900s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.950s forwards">e</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 2.100s forwards">p</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 2.150s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 2.200s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 2.250s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 2.300s forwards">r</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 2.350s forwards">u</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 2.500s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 2.550s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 2.600s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 2.650s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 2.700s forwards">?</span></span></h1>
 <div style="opacity:0;animation:rise .5s cubic-bezier(.22,1,.36,1) 2.87s forwards;font:400 13px Inter;color:var(--muted);white-space:nowrap">Alege-ți interesele. Îți personalizăm experiența.</div>
 </div>
@@ -504,9 +523,9 @@ button,[onClick]{will-change:transform}
 <sc-if value="{{ s_perms }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;display:flex;flex-direction:column;animation:fade .25s ease">
 <div style="display:flex;gap:8px;padding:6px 24px 0"><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div><div style="flex:1;height:3px;border-radius:3px;background:var(--acc)"></div></div>
-<div onClick="{{ goInterests }}" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
+<div onClick="{{ goInterests }}" role="button" aria-label="Înapoi" style="display:flex;align-items:center;gap:5px;padding:16px 24px 0;min-height:44px;color:var(--ink);font:500 13px Inter;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="m15 6-6 6 6 6"></path></svg>Înapoi</div>
 <div style="padding:14px 24px 0">
-<div style="display:flex;margin:2px 0 14px"><img src="assets/ic-bell.png" alt="" style="width:88px;height:88px;display:block"></div>
+<div style="display:flex;margin:2px 0 14px"><img src="assets/ic-bell.png" alt="Clopoțel notificări" role="img" style="width:88px;height:88px;display:block"></div>
 <h1 style="font:700 27px/1.2 Inter;letter-spacing:-.02em;color:var(--ink);margin:0 0 5px"><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.100s forwards">D</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.150s forwards">o</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.200s forwards">r</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.250s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.300s forwards">ș</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.350s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.400s forwards">i</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.500s forwards">s</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.550s forwards">ă</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.650s forwards">î</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.700s forwards">ț</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.750s forwards">i</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.850s forwards">a</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.900s forwards">c</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 0.950s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.000s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.050s forwards">v</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.100s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.150s forwards">z</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.200s forwards">i</span></span><span style="display:inline-block;width:.26em"></span><span style="display:inline-block;white-space:nowrap"><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.300s forwards">n</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.350s forwards">o</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.400s forwards">t</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.450s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.500s forwards">f</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.550s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.600s forwards">c</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.650s forwards">ă</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.700s forwards">r</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.750s forwards">i</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.800s forwards">l</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.850s forwards">e</span><span style="display:inline-block;opacity:0;transform:translateY(2px);animation:sign .42s cubic-bezier(.33,.85,.3,1) 1.900s forwards">?</span></span></h1>
 <div style="opacity:0;animation:rise .5s cubic-bezier(.22,1,.36,1) 2.37s forwards;font:400 13px/1.5 Inter;color:var(--muted);text-wrap:pretty">Activează notificările și localizarea ta pentru a fi la curent cu toate întâlnirile potrivite pentru tine.</div>
 </div>
@@ -540,7 +559,7 @@ button,[onClick]{will-change:transform}
 <!-- ═══ WELCOME ═══ -->
 <sc-if value="{{ s_welcome }}" hint-placeholder-val="{{ false }}">
 <div style="flex:1;position:relative;background:linear-gradient(160deg,#93a3ad,#4b5a66);animation:fade .3s ease">
-<img src="assets/banner-image.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:52% 40%">
+<img src="assets/banner-image.jpg" alt="" role="presentation" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:52% 40%">
 <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 35%,rgba(0,0,0,.62) 70%,rgba(0,0,0,.9))"></div>
 <div style="position:absolute;left:0;right:0;bottom:0;padding:0 26px 34px;display:flex;flex-direction:column">
 <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px">
@@ -638,9 +657,9 @@ button,[onClick]{will-change:transform}
 </sc-if>
 </div>
 <div onClick="{{ samplePostImg }}" style="align-self:flex-start;margin-top:11px;font:600 12.5px Inter;color:var(--acc2);cursor:pointer">Folosește o fotografie de exemplu</div>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:20px 0 8px">Descriere</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:20px 0 8px">Descriere</div>
 <textarea onFocus="{{ postCapFocus }}" onBlur="{{ postCapBlur }}" value="{{ postCap }}" onChange="{{ setPostCap }}" placeholder="Scrie ceva despre această seară..." style="width:100%;height:92px;border-radius:12px;border:1.5px solid {{ postCapFocBd }};background:var(--paper);padding:12px 14px;font:400 14px Inter;line-height:1.5;color:var(--ink);outline:none;box-shadow:{{ postCapGlow }};transition:border-color .16s ease,box-shadow .16s ease;resize:none"></textarea>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:20px 0 9px">Leag-o de o întâlnire</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:20px 0 9px">Leag-o de o întâlnire</div>
 <div style="display:flex;flex-wrap:wrap;gap:8px">
 <sc-for list="{{ postEvOpts }}" as="o" hint-placeholder-count="4">
 <span onClick="{{ o.pick }}" style="border-radius:999px;padding:8px 13px;font:600 12px Inter;cursor:pointer;background:{{ o.bg }};color:{{ o.fg }};border:1px solid {{ o.bd }}">{{ o.title }}</span>
@@ -669,7 +688,7 @@ button,[onClick]{will-change:transform}
 <div style="display:flex;align-items:center;gap:18px;padding:22px 16px 6px;background:var(--paper)">
 <div onClick="{{ goProfile }}" style="width:34px;height:34px;flex:none;border-radius:999px;background:var(--acc);background-image:{{ meBg }};background-size:cover;background-position:center;color:#FFFFFF;font:600 14px Outfit,sans-serif;display:flex;align-items:center;justify-content:center;cursor:pointer"></div>
 <div style="flex:1;font:400 30px Satisfy,cursive;letter-spacing:.01em;color:var(--ink);line-height:1.15;-webkit-text-stroke:1.6px var(--acc);paint-order:stroke fill">Invite</div>
-<div style="display:flex;align-items:center;gap:16px;flex:none;padding:9px 15px;border-radius:999px;background:color-mix(in oklab, #FFFFFF 20%, transparent);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid color-mix(in oklab, #FFFFFF 40%, transparent);box-shadow:0 4px 12px rgba(15,23,42,.04), inset 0 1px 0 rgba(255,255,255,.45)">
+<div style="display:flex;align-items:center;gap:16px;flex:none;padding:9px 15px;border-radius:999px;background:color-mix(in oklab, var(--paper) 20%, transparent);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid color-mix(in oklab, var(--paper) 40%, transparent);box-shadow:0 4px 12px rgba(15,23,42,.04), inset 0 1px 0 rgba(255,255,255,.45)">
 <div onClick="{{ goCalendar }}" style="cursor:pointer;color:var(--ink2);position:relative">
 <sc-if value="{{ hasCalCount }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;top:-4px;right:-5px;min-width:15px;height:15px;border-radius:999px;background:var(--acc);color:#FFFFFF;font:600 9.5px Inter;display:flex;align-items:center;justify-content:center;padding:0 3px;z-index:1">{{ calCount }}</div></sc-if><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3.1 7.05a2.9 2.9 0 0 1 2.9-2.9h12a2.9 2.9 0 0 1 2.9 2.9v11.9a2.9 2.9 0 0 1-2.9 2.9H6a2.9 2.9 0 0 1-2.9-2.9zM3.1 9.35h17.8M7.4 2.1v3.9M16.6 2.1v3.9"></path></svg></div>
 <div onClick="{{ goNotifs }}" style="cursor:pointer;color:var(--ink2);position:relative">
@@ -763,7 +782,7 @@ button,[onClick]{will-change:transform}
 </div>
 </sc-if>
 <sc-if value="{{ p.isVideo }}" hint-placeholder-val="{{ false }}">
-{{ p.videoEl }}
+<div style="width:100%;aspect-ratio:1/1;background:var(--tint)">{{ p.videoEl }}</div>
 </sc-if>
 <sc-if value="{{ p.single }}" hint-placeholder-val="{{ true }}">
 <div onClick="{{ p.like }}" style="width:100%;aspect-ratio:1/1;background:{{ p.grad }};background-image:{{ p.imgBg }};background-size:cover;background-position:center;cursor:pointer"></div>
@@ -795,7 +814,7 @@ button,[onClick]{will-change:transform}
 <div style="display:flex;align-items:center;padding:20px 20px 14px;position:{{ hdrPos }};top:0;left:0;right:0;z-index:9;background:color-mix(in oklab, var(--paper) 16%, transparent);backdrop-filter:blur(22px) saturate(2.1);-webkit-backdrop-filter:blur(22px) saturate(2.1)">
 <div onClick="{{ goProfile }}" style="width:34px;height:34px;flex:none;border-radius:999px;background:var(--acc);background-image:{{ meBg }};background-size:cover;background-position:center;margin-right:12px;cursor:pointer"></div>
 <div style="flex:1;font:700 21px Inter;letter-spacing:-.015em;color:var(--ink)">Explorează</div>
-<div style="display:flex;align-items:center;gap:{{ hdrPillGap }};flex:none;padding:{{ hdrPillPad }};border-radius:999px;transition:padding .22s cubic-bezier(.22,1,.36,1),gap .22s ease;background:color-mix(in oklab, #FFFFFF 20%, transparent);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid color-mix(in oklab, #FFFFFF 40%, transparent);box-shadow:0 4px 12px rgba(15,23,42,.04), inset 0 1px 0 rgba(255,255,255,.45)">
+<div style="display:flex;align-items:center;gap:{{ hdrPillGap }};flex:none;padding:{{ hdrPillPad }};border-radius:999px;transition:padding .22s cubic-bezier(.22,1,.36,1),gap .22s ease;background:color-mix(in oklab, var(--paper) 20%, transparent);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border:1px solid color-mix(in oklab, var(--paper) 40%, transparent);box-shadow:0 4px 12px rgba(15,23,42,.04), inset 0 1px 0 rgba(255,255,255,.45)">
 <div onClick="{{ goMap }}" style="width:{{ hdrPillSz }};height:{{ hdrPillSz }};display:flex;align-items:center;justify-content:center;border-radius:999px;cursor:pointer;transition:width .22s cubic-bezier(.22,1,.36,1),height .22s cubic-bezier(.22,1,.36,1);color:var(--ink2)"><svg width="{{ hdrIco }}" height="{{ hdrIco }}" viewBox="0 -960 960 960" fill="currentColor" style="flex:none"><path d="M640-560v-126 126ZM174-132q-20 8-37-4.5T120-170v-560q0-13 7.5-23t20.5-15l212-72 240 84 186-72q20-8 37 4.5t17 33.5v337q-15-23-35.5-42T760-528v-204l-120 46v126q-21 0-41 3.5T560-546v-140l-160-56v523l-226 87Zm26-96 120-46v-468l-120 40v474Zm496.5-32q22.5-20 23.5-60 1-34-22.5-57T640-400q-34 0-57 23t-23 57q0 34 23 57t57 23q34 0 56.5-20ZM640-160q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 23-5.5 43.5T778-238l102 102-56 56-102-102q-18 11-38.5 16.5T640-160ZM320-742v468-468Z"></path></svg></div>
 <div onClick="{{ toggleSearch }}" style="width:{{ hdrPillSz }};height:{{ hdrPillSz }};display:flex;align-items:center;justify-content:center;border-radius:999px;cursor:pointer;transition:width .22s cubic-bezier(.22,1,.36,1),height .22s cubic-bezier(.22,1,.36,1);color:{{ searchIconFg }}"><svg width="{{ hdrIco }}" height="{{ hdrIco }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.4" cy="10.4" r="7.6"></circle><path d="M6.6 6.6a5.4 5.4 0 0 0-1.3 3.9"></path><path d="M15.9 15.9 21 21"></path></svg></div>
 <div onClick="{{ toggleFilters }}" style="width:{{ hdrPillSz }};height:{{ hdrPillSz }};display:flex;align-items:center;justify-content:center;border-radius:999px;cursor:pointer;transition:width .22s cubic-bezier(.22,1,.36,1),height .22s cubic-bezier(.22,1,.36,1);color:{{ filtIconFg }};position:relative">
@@ -1050,7 +1069,7 @@ button,[onClick]{will-change:transform}
 <div style="flex:1;font:700 22px Inter;letter-spacing:-.015em;color:var(--ink)">Mesaje</div>
 <div onClick="{{ openCompose }}" style="width:36px;height:36px;border-radius:999px;background:var(--acc);color:#FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="M4 20h4L20 8l-4-4L4 16zM15 5l4 4"></path></svg></div>
 </div>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:9px">Anunțuri de la organizatori</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:9px">Anunțuri de la organizatori</div>
 <sc-for list="{{ threads }}" as="t" hint-placeholder-count="3">
 <div onClick="{{ t.open }}" style="display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:13px;margin-bottom:11px;cursor:pointer">
 <div style="width:42px;height:42px;border-radius:11px;background-image:{{ t.thumb }};background-size:cover;background-position:center;flex:none;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--line)"></div>
@@ -1062,7 +1081,7 @@ button,[onClick]{will-change:transform}
 </div>
 </sc-for>
 <sc-if value="{{ hasDMs }}" hint-placeholder-val="{{ true }}">
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:20px 0 9px">Conversații private</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:20px 0 9px">Conversații private</div>
 <sc-for list="{{ dmThreads }}" as="d" hint-placeholder-count="1">
 <div style="position:relative;margin-bottom:11px;border-radius:12px;overflow:hidden">
 <div onClick="{{ d.remove }}" style="position:absolute;inset:0;background:var(--dangBg);display:flex;align-items:center;justify-content:flex-end;padding-right:18px;cursor:pointer">
@@ -1140,7 +1159,7 @@ button,[onClick]{will-change:transform}
 <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
 <div style="width:26px;height:26px;border-radius:999px;background:var(--acc);background-image:{{ m.photo }};background-size:cover;background-position:center;color:#FFFFFF;font:700 10.5px Inter;display:flex;align-items:center;justify-content:center;flex:none"><sc-if value="{{ m.noPhoto }}" hint-placeholder-val="{{ true }}">{{ m.initial }}</sc-if></div>
 <div style="flex:1;min-width:0;font:700 12.5px Inter;color:var(--ink)">{{ m.name }}</div>
-<div style="font:400 11px Inter;color:var(--muted);flex:none">{{ m.time }}</div>
+<div style="font:400 12px Inter;color:var(--muted);flex:none">{{ m.time }}</div>
 </div>
 <div style="font:400 13.5px/1.5 Inter;color:var(--ink2);text-wrap:pretty">{{ m.text }}</div>
 <div onClick="{{ m.toggleLike }}" style="display:flex;align-items:center;gap:6px;margin-top:9px;cursor:pointer">
@@ -1256,7 +1275,7 @@ button,[onClick]{will-change:transform}
 </div>
 </sc-for>
 <div style="display:flex;align-items:center;gap:10px;margin:4px 0 16px">
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)">Trecute</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)">Trecute</div>
 <div style="flex:1;height:1px;background:var(--line)"></div>
 </div>
 <sc-for list="{{ hostPastRows }}" as="h" hint-placeholder-count="2">
@@ -1521,7 +1540,7 @@ button,[onClick]{will-change:transform}
 <div style="flex:none;display:flex;align-items:center;justify-content:center;color:var(--okIcon)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18M8.5 12.5 11 15l4.5-5"></path></svg></div>
 </sc-if>
 <sc-if value="{{ c.notGoing }}" hint-placeholder-val="{{ true }}">
-<span style="flex:none;background:{{ c.tagBg }};color:{{ c.tagFg }};border-radius:999px;padding:4px 10px;font:600 10.5px Inter">{{ c.role }}</span>
+<span style="flex:none;background:{{ c.tagBg }};color:{{ c.tagFg }};border-radius:999px;padding:4px 10px;font:600 12px Inter">{{ c.role }}</span>
 </sc-if>
 </div>
 </sc-for>
@@ -1540,7 +1559,7 @@ button,[onClick]{will-change:transform}
 </div>
 <div class="sc" style="flex:1;min-height:0;overflow-y:auto;padding:16px 18px 28px">
 <sc-if value="{{ hasFriendReq }}" hint-placeholder-val="{{ true }}">
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Cereri primite</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Cereri primite</div>
 <sc-for list="{{ friendReqs }}" as="r" hint-placeholder-count="2">
 <div style="border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:10px;background:var(--paper)">
 <div onClick="{{ r.open }}" style="display:flex;align-items:center;gap:11px;cursor:pointer">
@@ -1559,7 +1578,7 @@ button,[onClick]{will-change:transform}
 </sc-for>
 </sc-if>
 <sc-if value="{{ hasFriendSent }}" hint-placeholder-val="{{ false }}">
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:20px 0 10px">Cereri trimise</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:20px 0 10px">Cereri trimise</div>
 <sc-for list="{{ friendSent }}" as="s" hint-placeholder-count="1">
 <div style="display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;background:var(--paper)">
 <div onClick="{{ s.open }}" style="width:36px;height:36px;border-radius:999px;background:var(--tint);background-image:{{ s.photo }};background-size:cover;background-position:center;flex:none;cursor:pointer"></div>
@@ -1568,7 +1587,7 @@ button,[onClick]{will-change:transform}
 </div>
 </sc-for>
 </sc-if>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:20px 0 10px">{{ friendsLabel }}</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:20px 0 10px">{{ friendsLabel }}</div>
 <sc-if value="{{ friendsEmpty }}" hint-placeholder-val="{{ false }}">
 <div style="border:1px dashed var(--line);border-radius:14px;padding:26px 20px;text-align:center">
 <div style="font:600 13.5px Inter;color:var(--ink);margin-bottom:4px">Niciun prieten încă</div>
@@ -1593,7 +1612,7 @@ button,[onClick]{will-change:transform}
 <div onClick="{{ goProfile }}" style="cursor:pointer;color:var(--ink);flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="M15 6l-6 6 6 6"></path></svg></div>
 <div style="flex:1;font:700 19px Inter;letter-spacing:-.015em;color:var(--ink)">Cereri primite</div>
 <sc-if value="{{ hasInbox }}" hint-placeholder-val="{{ true }}">
-<span style="background:var(--warnBg);color:var(--warnFg);border-radius:999px;padding:4px 10px;font:600 10.5px Inter;flex:none">{{ inboxBadge }}</span>
+<span style="background:var(--warnBg);color:var(--warnFg);border-radius:999px;padding:4px 10px;font:600 12px Inter;flex:none">{{ inboxBadge }}</span>
 </sc-if>
 </div>
 <div class="sc" style="flex:1;min-height:0;overflow-y:auto;padding:16px 18px 28px">
@@ -1611,7 +1630,7 @@ button,[onClick]{will-change:transform}
 <div style="font:700 15px Inter;letter-spacing:-.01em;color:var(--ink);line-height:1.25">{{ g.title }}</div>
 <div style="font:400 12px Inter;color:var(--muted);margin-top:3px">{{ g.meta }}</div>
 </div>
-<span style="background:var(--warnBg);color:var(--warnFg);border-radius:999px;padding:3px 9px;font:600 10.5px Inter;flex:none">{{ g.count }}</span>
+<span style="background:var(--warnBg);color:var(--warnFg);border-radius:999px;padding:3px 9px;font:600 12px Inter;flex:none">{{ g.count }}</span>
 </div>
 <sc-for list="{{ g.pending }}" as="r" hint-placeholder-count="2">
 <div style="border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:10px;background:var(--paper)">
@@ -1661,7 +1680,7 @@ button,[onClick]{will-change:transform}
 <div style="font:700 14.5px Inter;letter-spacing:-.01em;color:var(--ink);line-height:1.25">{{ r.title }}</div>
 <div style="font:400 12px Inter;color:var(--muted);margin-top:4px">{{ r.meta }}</div>
 </div>
-<span style="background:{{ r.chipBg }};color:{{ r.chipFg }};border-radius:999px;padding:4px 10px;font:600 10.5px Inter;flex:none">{{ r.label }}</span>
+<span style="background:{{ r.chipBg }};color:{{ r.chipFg }};border-radius:999px;padding:4px 10px;font:600 12px Inter;flex:none">{{ r.label }}</span>
 </div>
 <sc-if value="{{ r.hasNote }}" hint-placeholder-val="{{ false }}">
 <div style="font:400 12.5px Inter;line-height:1.45;color:var(--ink2);background:var(--surface);border-radius:10px;padding:10px 12px;margin-top:11px">{{ r.note }}</div>
@@ -1690,7 +1709,7 @@ button,[onClick]{will-change:transform}
 </div>
 <div class="sc" style="flex:1;min-height:0;overflow-y:auto">
 <sc-if value="{{ hasUnread }}" hint-placeholder-val="{{ true }}">
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);padding:14px 18px 6px">Noi</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);padding:14px 18px 6px">Noi</div>
 <sc-for list="{{ notifNew }}" as="n" hint-placeholder-count="3">
 <div onClick="{{ n.go }}" style="display:flex;gap:12px;padding:13px 18px;background:var(--unread);border-bottom:1px solid var(--line);cursor:pointer">
 <div style="width:30px;height:30px;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--acc2)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="{{ n.icon }}"></path></svg></div>
@@ -1699,7 +1718,7 @@ button,[onClick]{will-change:transform}
 </div>
 </sc-for>
 </sc-if>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);padding:14px 18px 6px">Mai vechi</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);padding:14px 18px 6px">Mai vechi</div>
 <sc-for list="{{ notifOld }}" as="n" hint-placeholder-count="4">
 <div onClick="{{ n.go }}" style="display:flex;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line);cursor:pointer">
 <div style="width:30px;height:30px;display:flex;align-items:center;justify-content:center;flex:none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--acc2)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="{{ n.icon }}"></path></svg></div>
@@ -1749,6 +1768,11 @@ button,[onClick]{will-change:transform}
 <div style="width:28px;height:28px;border-radius:9px;background:var(--tint);display:flex;align-items:center;justify-content:center;flex:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--acc2)" stroke-width="1.9" stroke-linecap="round"><path d="M2 4l20 20M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 4-2.5M19 13a10 10 0 0 0-6-2.9M12 20h.01"></path></svg></div>
 <div style="flex:1"><div style="font:500 14px Inter;color:var(--ink)">Mod offline</div><div style="font:400 11.5px Inter;color:var(--muted);margin-top:2px">Doar pentru testare</div></div>
 <div onClick="{{ toggleOffline }}" style="width:44px;height:25px;border-radius:999px;background:{{ offTrackBg }};padding:3px;cursor:pointer;display:flex;justify-content:{{ offKnob }}"><div style="width:19px;height:19px;border-radius:999px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2)"></div></div>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:12px 13px;border-bottom:1px solid var(--line)">
+<div style="width:28px;height:28px;border-radius:9px;background:var(--tint);display:flex;align-items:center;justify-content:center;flex:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--acc2)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{ themeIcon }}"></path></svg></div>
+<div style="flex:1;font:500 14px Inter;color:var(--ink)">{{ themeLabel }}</div>
+<div onClick="{{ toggleTheme }}" style="width:44px;height:25px;border-radius:999px;background:{{ themeTrackBg }};padding:3px;cursor:pointer;display:flex;justify-content:{{ themeKnob }}"><div style="width:19px;height:19px;border-radius:999px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2)"></div></div>
 </div>
 <div style="display:flex;align-items:center;gap:12px;padding:14px 13px">
 <div style="width:28px;height:28px;border-radius:9px;background:var(--tint);display:flex;align-items:center;justify-content:center;flex:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--acc2)" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.4 4 5.6 4 9s-1.5 6.6-4 9c-2.5-2.4-4-5.6-4-9s1.5-6.6 4-9"></path></svg></div>
@@ -1831,7 +1855,7 @@ button,[onClick]{will-change:transform}
 </div>
 <div style="padding:18px 20px 22px">
 <div style="display:flex;align-items:flex-start;gap:12px">
-<div style="flex:1;min-width:0;font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--ink2);padding-top:4px">{{ ev.cat }}</div>
+<div style="flex:1;min-width:0;font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--ink2);padding-top:4px">{{ ev.cat }}</div>
 <div onClick="{{ openHost }}" style="flex:none;display:flex;align-items:center;gap:6px;cursor:pointer">
 <svg width="9" height="9" viewBox="0 0 24 24" fill="var(--acc)" stroke="var(--acc)" stroke-width="1.6" stroke-linejoin="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24));flex:none"><path d="{{ starPath }}"></path></svg>
 <span style="font:500 11px Inter;color:var(--muted)">{{ ev.hostAvg }}</span>
@@ -1849,13 +1873,13 @@ button,[onClick]{will-change:transform}
 <sc-if value="{{ ev.hasRequests }}" hint-placeholder-val="{{ false }}">
 <div style="height:1px;background:var(--line);margin:18px 0"></div>
 <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-<div style="flex:1;font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)">Cereri de înscriere</div>
-<span style="background:var(--warnBg);color:var(--warnFg);border-radius:999px;padding:3px 9px;font:600 10.5px Inter">{{ ev.requestCount }} în așteptare</span>
+<div style="flex:1;font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)">Cereri de înscriere</div>
+<span style="background:var(--warnBg);color:var(--warnFg);border-radius:999px;padding:3px 9px;font:600 12px Inter">{{ ev.requestCount }} în așteptare</span>
 </div>
 <sc-for list="{{ ev.pending }}" as="r" hint-placeholder-count="2">
 <div style="border:1px solid var(--line);border-radius:14px;padding:12px 13px;margin-bottom:9px;background:var(--paper)">
 <sc-if value="{{ r.over }}" hint-placeholder-val="{{ false }}">
-<div style="display:flex;align-items:center;gap:6px;margin-bottom:9px;font:600 10.5px Inter;letter-spacing:.06em;text-transform:uppercase;color:var(--warnFg)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24));flex:none"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4M12 16h.01"></path></svg>Fără locuri libere</div>
+<div style="display:flex;align-items:center;gap:6px;margin-bottom:9px;font:600 12px Inter;letter-spacing:.06em;text-transform:uppercase;color:var(--warnFg)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24));flex:none"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4M12 16h.01"></path></svg>Fără locuri libere</div>
 </sc-if>
 <div onClick="{{ r.open }}" style="display:flex;align-items:center;gap:11px;cursor:pointer">
 <div style="width:34px;height:34px;border-radius:999px;background:var(--acc);background-image:{{ r.photo }};background-size:cover;background-position:center;color:#FFFFFF;font:700 13px Inter;display:flex;align-items:center;justify-content:center;flex:none"><sc-if value="{{ r.noPhoto }}" hint-placeholder-val="{{ true }}">{{ r.initial }}</sc-if></div>
@@ -1874,7 +1898,7 @@ button,[onClick]{will-change:transform}
 </sc-for>
 </sc-if>
 <div style="height:1px;background:var(--line);margin:18px 0"></div>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Descriere</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Descriere</div>
 <div style="font:400 13.5px/1.55 Inter;color:var(--ink2);text-wrap:pretty">{{ ev.about }}</div>
 <div style="display:flex;gap:8px;margin:20px 0">
 <sc-for list="{{ ev.tags }}" as="t" hint-placeholder-count="3">
@@ -1895,7 +1919,7 @@ button,[onClick]{will-change:transform}
 <sc-if value="{{ ev.hasPhotos }}" hint-placeholder-val="{{ false }}">
 <div style="height:1px;background:var(--line);margin:18px 0"></div>
 <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-<div style="flex:1;font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)">Fotografii</div>
+<div style="flex:1;font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)">Fotografii</div>
 <span style="font:400 11.5px Inter;color:var(--muted)">{{ ev.photoCount }}</span>
 </div>
 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px">
@@ -1907,7 +1931,7 @@ button,[onClick]{will-change:transform}
 </sc-if>
 </div>
 </sc-if>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)">{{ ev.partLabel }}</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)">{{ ev.partLabel }}</div>
 <div style="height:3px;background:var(--line);border-radius:3px;margin:9px 0 14px;overflow:hidden"><div style="height:100%;width:{{ ev.pct }};background:var(--acc)"></div></div>
 <div onClick="{{ openSheet }}" style="display:flex;align-items:center;margin-bottom:18px;cursor:pointer">
 <sc-for list="{{ ev.avatars }}" as="a" hint-placeholder-count="3">
@@ -2296,17 +2320,17 @@ Privat</div>
 </div>
 <div onClick="{{ pickAvatar }}" style="font:600 13.5px Inter;color:var(--acc2);cursor:pointer">{{ avatarCta }}</div>
 </div>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Prenume</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Prenume</div>
 <input onFocus="{{ editFirstFocus }}" onBlur="{{ editFirstBlur }}" value="{{ editFirst }}" onChange="{{ setEditFirst }}" placeholder="Andrei" style="width:100%;height:48px;border-radius:12px;border:1.5px solid {{ editFirstFocBd }};background:var(--paper);padding:0 14px;font:500 14px Inter;color:var(--ink);outline:none;box-shadow:{{ editFirstGlow }};transition:border-color .16s ease,box-shadow .16s ease">
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:16px 0 7px">Nume</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:16px 0 7px">Nume</div>
 <input onFocus="{{ editLastFocus }}" onBlur="{{ editLastBlur }}" value="{{ editLast }}" onChange="{{ setEditLast }}" placeholder="Popescu" style="width:100%;height:48px;border-radius:12px;border:1.5px solid {{ editLastFocBd }};background:var(--paper);padding:0 14px;font:500 14px Inter;color:var(--ink);outline:none;box-shadow:{{ editLastGlow }};transition:border-color .16s ease,box-shadow .16s ease">
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:16px 0 7px">Oraș</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:16px 0 7px">Oraș</div>
 <div style="display:flex;flex-wrap:wrap;gap:7px">
 <sc-for list="{{ editCities }}" as="c" hint-placeholder-count="5">
 <div onClick="{{ c.pick }}" style="cursor:pointer;border-radius:999px;padding:8px 13px;font:600 12.5px Outfit,sans-serif;background:{{ c.bg }};color:{{ c.fg }};border:1px solid {{ c.bd }}">{{ c.name }}</div>
 </sc-for>
 </div>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:18px 0 7px">Interese</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:18px 0 7px">Interese</div>
 <div style="display:flex;flex-wrap:wrap;gap:7px">
 <sc-for list="{{ editInterests }}" as="i" hint-placeholder-count="6">
 <div onClick="{{ i.toggle }}" style="cursor:pointer;border-radius:999px;padding:8px 13px;font:600 12.5px Outfit,sans-serif;background:{{ i.bg }};color:{{ i.fg }};border:1px solid {{ i.bd }}">{{ i.name }}</div>
@@ -2322,7 +2346,7 @@ Privat</div>
 <div onClick="{{ closeRequest }}" style="position:absolute;inset:0;background:var(--ovl);z-index:38;animation:fade .2s ease"></div>
 <div style="position:absolute;left:24px;right:24px;top:50%;transform:translateY(-50%);z-index:39;background:var(--paper);border-radius:20px;padding:22px 20px 18px;animation:fade .2s ease;box-shadow:0 18px 50px rgba(15,23,42,.28)">
 <div onClick="{{ closeRequest }}" style="position:absolute;top:8px;right:10px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="M6 6l12 12M18 6 6 18"></path></svg></div>
-<div style="display:inline-flex;align-items:center;gap:6px;background:var(--tint);border-radius:999px;padding:5px 11px;font:600 10.5px Inter;letter-spacing:.06em;text-transform:uppercase;color:var(--acc2);margin-bottom:12px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="M20 7 10 17l-5-5"></path></svg>Cu aprobarea organizatorului</div>
+<div style="display:inline-flex;align-items:center;gap:6px;background:var(--tint);border-radius:999px;padding:5px 11px;font:600 12px Inter;letter-spacing:.06em;text-transform:uppercase;color:var(--acc2);margin-bottom:12px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="M20 7 10 17l-5-5"></path></svg>Cu aprobarea organizatorului</div>
 <div style="font:700 17px Inter;color:var(--ink);margin-bottom:6px">Trimiți o cerere?</div>
 <div style="font:400 13px Inter;line-height:1.45;color:var(--ink2);margin-bottom:14px">Organizatorul analizează fiecare cerere și va reveni cu un răspuns către tine. Mulțumim!</div>
 <div style="display:flex;align-items:center;gap:9px;background:var(--surface);border-radius:12px;padding:11px 13px;margin-bottom:16px">
@@ -2354,9 +2378,9 @@ Privat</div>
 <span style="background:var(--tint);color:var(--acc2);border-radius:999px;padding:4px 11px;font:600 11px Inter">{{ person.role }}</span>
 </div>
 <div style="display:flex;gap:10px;margin-top:16px">
-<div style="flex:1;border:1px solid var(--line);border-radius:12px;padding:11px 0;text-align:center"><div style="font:700 17px Inter;color:var(--ink)">{{ person.hosted }}</div><div style="font:400 11px Inter;color:var(--muted);margin-top:2px">Găzduite</div></div>
-<div style="flex:1;border:1px solid var(--line);border-radius:12px;padding:11px 0;text-align:center"><div style="font:700 17px Inter;color:var(--ink)">{{ person.attended }}</div><div style="font:400 11px Inter;color:var(--muted);margin-top:2px">Participări</div></div>
-<div style="flex:1;border:1px solid var(--line);border-radius:12px;padding:11px 0;text-align:center"><div style="font:700 17px Inter;color:var(--ink)">{{ person.mutual }}</div><div style="font:400 11px Inter;color:var(--muted);margin-top:2px">Împreună</div></div>
+<div style="flex:1;border:1px solid var(--line);border-radius:12px;padding:11px 0;text-align:center"><div style="font:700 17px Inter;color:var(--ink)">{{ person.hosted }}</div><div style="font:400 12px Inter;color:var(--muted);margin-top:2px">Găzduite</div></div>
+<div style="flex:1;border:1px solid var(--line);border-radius:12px;padding:11px 0;text-align:center"><div style="font:700 17px Inter;color:var(--ink)">{{ person.attended }}</div><div style="font:400 12px Inter;color:var(--muted);margin-top:2px">Participări</div></div>
+<div style="flex:1;border:1px solid var(--line);border-radius:12px;padding:11px 0;text-align:center"><div style="font:700 17px Inter;color:var(--ink)">{{ person.mutual }}</div><div style="font:400 12px Inter;color:var(--muted);margin-top:2px">Împreună</div></div>
 </div>
 <div style="display:flex;flex-direction:column;gap:9px;margin-top:16px">
 <button onClick="{{ openFullProfile }}" style="height:46px;border:0;border-radius:12px;background:var(--acc);color:#FFFFFF;font:600 14px Outfit,sans-serif;cursor:pointer">Vezi profilul complet</button>
@@ -2463,7 +2487,7 @@ Privat</div>
 </div>
 <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:0 16px 6px">
 <sc-for list="{{ weekdays }}" as="w" hint-placeholder-count="7">
-<div style="text-align:center;font:600 10.5px Inter;letter-spacing:.06em;color:var(--muted)">{{ w.d }}</div>
+<div style="text-align:center;font:600 12px Inter;letter-spacing:.06em;color:var(--muted)">{{ w.d }}</div>
 </sc-for>
 </div>
 <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:0 16px">
@@ -2546,7 +2570,7 @@ Privat</div>
 <div style="display:flex;align-items:center;gap:8px">
 <span style="font:500 11px Inter;color:var(--muted);width:8px">{{ d.s }}</span>
 <div style="flex:1;height:7px;border-radius:999px;background:var(--surface);overflow:hidden"><div style="height:100%;width:{{ d.w }};background:var(--acc);border-radius:999px"></div></div>
-<span style="font:400 11px Inter;color:var(--muted);width:18px;text-align:right">{{ d.c }}</span>
+<span style="font:400 12px Inter;color:var(--muted);width:18px;text-align:right">{{ d.c }}</span>
 </div>
 </sc-for>
 </div>
@@ -2592,7 +2616,7 @@ Privat</div>
 <div style="height:1px;background:var(--line);margin:12px 0"></div>
 <div style="display:flex;align-items:center;gap:10px;padding:2px 0 4px">
 <div style="flex:1">
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Organizator</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Organizator</div>
 <div style="font:500 14px Inter;color:var(--ink)">{{ reviewHost }}</div>
 </div>
 <div style="display:flex;gap:4px">
@@ -2735,7 +2759,7 @@ Privat</div>
 </div>
 <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:0 16px 6px">
 <sc-for list="{{ weekdays }}" as="w" hint-placeholder-count="7">
-<div style="text-align:center;font:600 10.5px Inter;letter-spacing:.06em;color:var(--muted)">{{ w.d }}</div>
+<div style="text-align:center;font:600 12px Inter;letter-spacing:.06em;color:var(--muted)">{{ w.d }}</div>
 </sc-for>
 </div>
 <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:0 16px">
@@ -2786,7 +2810,7 @@ Privat</div>
 <div style="width:34px;height:34px;border-radius:999px;background:var(--tint);display:flex;align-items:center;justify-content:center;flex:none;color:var(--acc2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 .75px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1.3px rgba(16,24,40,.24))"><path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path><circle cx="12" cy="12" r="4.5"></circle></svg></div>
 <div style="flex:1;font:600 14px Inter;color:var(--ink)">Folosește locația mea</div>
 </div>
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);padding:12px 16px 6px">Locuri apropiate</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);padding:12px 16px 6px">Locuri apropiate</div>
 <sc-for list="{{ locSugg }}" as="l" hint-placeholder-count="5">
 <div onClick="{{ l.pick }}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;margin:0 8px;border-radius:14px;cursor:pointer;background:{{ l.bg }}">
 <div style="width:34px;height:34px;border-radius:999px;background:var(--soft2);display:flex;align-items:center;justify-content:center;flex:none;color:var(--ink2)"><svg width="15" height="15" viewBox="0 -960 960 960" fill="currentColor" ><path d="M536.5-503.5Q560-527 560-560t-23.5-56.5Q513-640 480-640t-56.5 23.5Q400-593 400-560t23.5 56.5Q447-480 480-480t56.5-23.5ZM480-186q122-112 181-203.5T720-552q0-109-69.5-178.5T480-800q-101 0-170.5 69.5T240-552q0 71 59 162.5T480-186Zm0 106Q319-217 239.5-334.5T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 100-79.5 217.5T480-80Zm0-480Z"></path></svg></div>
@@ -2917,7 +2941,7 @@ Privat</div>
 </div>
 </sc-if>
 <sc-if value="{{ res.no }}" hint-placeholder-val="{{ false }}">
-<div style="font:600 10.5px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:24px 0 10px">Alte întâlniri pentru tine</div>
+<div style="font:600 12px Inter;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:24px 0 10px">Alte întâlniri pentru tine</div>
 <sc-for list="{{ res.recs }}" as="c" hint-placeholder-count="2">
 <div onClick="{{ c.open }}" style="display:flex;gap:12px;align-items:center;padding:0 0 13px;margin-bottom:13px;border-bottom:1px solid var(--line);cursor:pointer">
 <div style="width:52px;height:52px;border-radius:12px;overflow:hidden;flex:none;background:{{ c.grad }}"><div style="width:100%;height:100%;background-image:{{ c.imgBg }};background-size:cover;background-position:center"></div></div>
@@ -3635,7 +3659,7 @@ class Component extends DCLogic {
       isVideo: !!e.video,
       notVideo: !e.video,
       videoEl: e.video ? React.createElement('video', {
-        src: this.asset(e.video), autoPlay: true, loop: true, muted: true, playsInline: true, preload: 'metadata',
+        src: this.asset(e.video), autoPlay: true, loop: true, muted: true, playsInline: true, preload: 'auto', 'webkit-playsinline': '',
         style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' }
       }) : null,
       hostPhoto: this.face(e.host),
@@ -3733,8 +3757,8 @@ class Component extends DCLogic {
 
     return {
       themeName: this.theme(),
-      themeLabel: dark ? 'Mod luminos' : 'Mod întunecat',
-      themeIcon: dark ? 'M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4' : 'M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5',
+      themeLabel: 'Mod întunecat',
+      themeIcon: 'M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5',
       toggleTheme: () => this.setState({ theme: dark ? 'light' : 'dark' }),
 
       s_login: sc === 'login', s_code: sc === 'code', s_forgot: sc === 'forgot', s_reset: sc === 'reset',
@@ -3761,7 +3785,26 @@ class Component extends DCLogic {
         ? ((st.vMethod || 'email') === 'sms' ? (st.phone || 'numărul tău') : ((st.email && st.email.trim()) || 'alexandru@email.com'))
         : st.codePurpose === 'reset' ? (st.fpEmail || 'andrei@email.com') : (st.loginEmail || 'andrei@email.com'),
       codeVal: st.code || '',
-      setCode: (e) => this.setState({ code: (e.target.value || '').replace(/\D/g, '').slice(0, 6), codeTried: false }),
+      setCode: (e) => {
+        const newCode = (e.target.value || '').replace(/\D/g, '').slice(0, 6);
+        this.setState({ code: newCode, codeTried: false }, () => {
+          if (newCode.length === 6) setTimeout(() => {
+            const st = this.state;
+            if ((st.code || '').length < 6) return;
+            if (st.codePurpose === 'phone') {
+              if (this.rt) { clearInterval(this.rt); this.rt = null; }
+              this.setState({ screen: 'terms', code: '', codeTried: false });
+              this.flash('Număr confirmat', st.phone || '');
+            } else if (st.codePurpose === 'signup') {
+              if (this.rt) { clearInterval(this.rt); this.rt = null; }
+              this.setState({ screen: 'verified', code: '', codeTried: false });
+            } else if (st.codePurpose === 'reset') {
+              if (this.rt) { clearInterval(this.rt); this.rt = null; }
+              this.setState({ screen: 'reset', code: '', np1: '', np2: '', resetTried: false });
+            } else this.finishAuth();
+          }, 350);
+        });
+      },
       codeBoxes: [0, 1, 2, 3, 4, 5].map(i => {
         const v = st.code || '';
         const active = v.length === i;
@@ -3769,6 +3812,7 @@ class Component extends DCLogic {
       }),
       codeErr: st.codeTried && (st.code || '').length < 6,
       codeErrMsg: 'Codul are 6 cifre',
+      codeKey: (e) => { if (e.key === 'Enter') { e.target.blur(); if ((st.code || '').length === 6) { if (st.codePurpose === 'phone') { if (this.rt) { clearInterval(this.rt); this.rt = null; } this.setState({ screen: 'terms', code: '', codeTried: false }); } else { this.setState({ screen: 'name', code: '', codeTried: false }); } } else { this.setState({ codeTried: true }); } } },
       codeBtnBg: (st.code || '').length === 6 ? 'var(--acc)' : 'var(--line)',
       codeBtnFg: (st.code || '').length === 6 ? '#FFFFFF' : 'var(--muted)',
       codeSubmit: () => {
@@ -3846,13 +3890,19 @@ class Component extends DCLogic {
       setPhoneLocal: (e) => {
         const dig = (e.target.value || '').replace(/\D/g, '').slice(0, 9);
         const fmt = [dig.slice(0, 3), dig.slice(3, 6), dig.slice(6, 9)].filter(Boolean).join(' ');
-        this.setState({ phoneLocal: fmt, phoneTried: false });
+        this.setState({ phoneLocal: fmt, phoneTried: false }, () => {
+          if (dig.length === 9) setTimeout(() => {
+            this.startResend();
+            this.setState({ screen: 'code', codePurpose: 'phone', code: '', codeTried: false, phone: '+40 ' + fmt.trim() });
+          }, 400);
+        });
       },
       phoneOk: (st.phoneLocal || '').replace(/\D/g, '').length >= 9,
       phoneErr: !!st.phoneTried && (st.phoneLocal || '').replace(/\D/g, '').length < 9,
       phoneFocBd: (st.phoneFoc || (st.phone || '').trim()) ? 'var(--acc)' : '#E9EDF2',
       phoneFocus: () => this.setState({ phoneFoc: true }),
       phoneBlur: () => this.setState({ phoneFoc: false }),
+      phoneKey: (e) => { if (e.key === 'Enter') { e.target.blur(); const dig = (st.phoneLocal || '').replace(/\D/g, ''); if (dig.length >= 9) this.setState({ screen: 'terms' }); else this.setState({ phoneTried: true }); } },
       phoneBd: (!!st.phoneTried && (st.phoneLocal || '').replace(/\D/g, '').length < 9) ? 'var(--warnIcon)'
         : ((st.phoneLocal || '').replace(/\D/g, '').length === 9 ? 'var(--acc)' : (st.phoneFoc ? 'var(--acc)' : 'var(--line)')),
       phonePfxBd: (st.phoneFoc || (st.phoneLocal || '').replace(/\D/g, '').length === 9) ? 'var(--acc)' : 'var(--line)',
@@ -4186,7 +4236,7 @@ class Component extends DCLogic {
         grad: 'var(--tint)', imgBg: this.bg(p.imgUrl || (p.img ? this.img(p.img) : '')),
         isVideo: !!p.video, notVideo: !p.video,
         videoEl: p.video ? React.createElement('video', {
-          src: this.asset(p.video), autoPlay: true, loop: true, muted: true, playsInline: true, preload: 'metadata',
+          src: this.asset(p.video), autoPlay: true, loop: true, muted: true, playsInline: true, preload: 'auto', 'webkit-playsinline': '',
           style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' }
         }) : null,
         open: () => this.setState({ lightboxFor: p.id })
@@ -4236,6 +4286,7 @@ class Component extends DCLogic {
       cancelReasonGlow: (st.cancelReasonFoc || (st.cancelReason || '').trim()) ? '0 0 0 3px color-mix(in oklab, var(--acc) 15%, transparent)' : 'none',
       emailFocus: () => this.setState({ emailFoc: true }),
       emailBlur: () => this.setState({ emailFoc: false }),
+      emailKey: (e) => { if (e.key === 'Enter' && this.emailOk(st.email)) { e.target.blur(); this.setState({ screen: 'verify', signupTried: false }); } else if (e.key === 'Enter') { this.setState({ signupTried: true }); } },
       signupTried: !!st.signupTried,
       signupErr: !!st.signupTried && !this.emailOk(st.email),
       emailBd: (!!st.signupTried && !this.emailOk(st.email)) ? 'var(--warnIcon)' : (st.emailFoc || (st.email || '').trim()) ? 'var(--acc)' : '#E9EDF2',
@@ -4243,8 +4294,10 @@ class Component extends DCLogic {
       emailGlow: (st.emailFoc || (st.email || '').trim()) ? '0 0 0 3px color-mix(in oklab, var(--acc) 15%, transparent)' : 'none',
       firstFocus: () => this.setState({ firstFoc: true }),
       firstBlur: () => this.setState({ firstFoc: false }),
+      firstKey: (e) => { if (e.key === 'Enter' && st.first.trim()) document.querySelector('input[placeholder="Popescu"]').focus(); },
       lastFocus: () => this.setState({ lastFoc: true }),
       lastBlur: () => this.setState({ lastFoc: false }),
+      lastKey: (e) => { if (e.key === 'Enter' && (st.first || '').trim()) { e.target.blur(); this.setState({ screen: 'greet' }); } },
       firstBd: (st.firstFoc || (st.first || '').trim()) ? 'var(--acc)' : 'var(--line)',
       firstGlow: (st.firstFoc || (st.first || '').trim()) ? '0 0 0 3px color-mix(in oklab, var(--acc) 15%, transparent)' : 'none',
       lastBd: (st.lastFoc || (st.last || '').trim()) ? 'var(--acc)' : 'var(--line)',
@@ -5261,6 +5314,8 @@ class Component extends DCLogic {
       notifKnob: st.prefs.notif ? 'flex-end' : 'flex-start',
       locTrackBg: st.prefs.loc ? 'var(--acc)' : 'var(--line)',
       locKnob: st.prefs.loc ? 'flex-end' : 'flex-start',
+      themeTrackBg: dark ? 'var(--acc)' : 'var(--line)',
+      themeKnob: dark ? 'flex-end' : 'flex-start',
       toggleNotifPref: () => this.setState(s => ({ prefs: { notif: !s.prefs.notif, loc: s.prefs.loc } })),
       toggleLocPref: () => this.setState(s => ({ prefs: { notif: s.prefs.notif, loc: !s.prefs.loc } })),
 
@@ -5642,7 +5697,7 @@ class Component extends DCLogic {
       navIco: st.navMini ? 20 : 25,
       navPad: st.navMini ? '3px 4px' : '6px 4px',
       navSide: st.navMini ? '46px' : '12px',
-      navBot: st.navMini ? '8px' : '10px',
+      navBot: st.navMini ? '8px' : (window.innerWidth <= 520 ? '24px' : '10px'),
       navHomeBg: 'transparent',
       navHomeSh: 'none',
       navExploreBg: 'transparent',
@@ -6179,7 +6234,14 @@ class Component extends DCLogic {
     return out;
   }
   bdayComplete() { const b = this.state.bday; return b.d != null && b.m != null && b.y != null; }
-  setBday(k, v) { this.setState(s => ({ bday: Object.assign({}, s.bday, { [k]: v }) })); }
+  setBday(k, v) {
+    this.setState(s => ({ bday: Object.assign({}, s.bday, { [k]: v }) }), () => {
+      const b = this.state.bday;
+      if (b.d !== null && b.m !== null && b.y !== null) {
+        setTimeout(() => this.setState({ bdayOpen: false }), 250);
+      }
+    });
+  }
 
   setRating(qi, v) {
     this.setState(s => { const q = s.draftRating.q.slice(); q[qi] = v; return { draftRating: Object.assign({}, s.draftRating, { q }) }; });
@@ -6605,8 +6667,8 @@ class Component extends DCLogic {
         notVideo: !p.video,
         video: p.video || '',
         videoEl: p.video ? React.createElement('video', {
-          src: this.asset(p.video), autoPlay: true, loop: true, muted: true, playsInline: true, preload: 'metadata',
-          style: { width: '100%', aspectRatio: '1/1', objectFit: 'cover', display: 'block', background: '#0B1C22' }
+          src: this.asset(p.video), autoPlay: true, loop: true, muted: true, playsInline: true, preload: 'auto', 'webkit-playsinline': '',
+          style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' }
         }) : null,
         slides: (p.imgs || []).map(k => ({ bg: this.bg(this.img(k)) })),
         dots: (p.imgs || []).map((k, i) => ({
